@@ -47,8 +47,8 @@ const AddDtModal = ({ open, handleClose, handleSubmit }) => {
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value="credit">Credit</MenuItem>
-            <MenuItem value="debit">Debit</MenuItem>
+            <MenuItem value="cashin">Cash in</MenuItem>
+            <MenuItem value="cashout">Cash out</MenuItem>
           </TextField>
 
           {/* Status */}
@@ -76,6 +76,7 @@ const AddDtModal = ({ open, handleClose, handleSubmit }) => {
 
           {/* Name */}
           <TextField
+            select
             label="Transaction Name"
             name="name"
             multiline
@@ -83,7 +84,14 @@ const AddDtModal = ({ open, handleClose, handleSubmit }) => {
             value={formData.name}
             onChange={handleChange}
             fullWidth
-          />
+          >
+            <MenuItem value="Electricity Bill">Electricity Bill</MenuItem>
+            <MenuItem value="Mobile Recharge">Mobile Recharge</MenuItem>
+            <MenuItem value="Loan">Loan</MenuItem>
+            <MenuItem value="Spice ATM">Spice ATM</MenuItem>
+            <MenuItem value="DMT">DMT</MenuItem>
+            <MenuItem value="Others">Others</MenuItem>
+          </TextField>
 
           {/* Remarks */}
           <TextField

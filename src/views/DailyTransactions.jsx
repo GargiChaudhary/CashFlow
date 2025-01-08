@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import { MenuOpen, Home, Payment } from "@mui/icons-material";
 import AddDtModal from "../components/AddDtModal";
-import { fetchDt } from "../firebase/dailyTransactionsServices";
+import { addDailyTransaction, fetchDt } from "../firebase/dailyTransactionsServices";
 
 const DailyTransactions = () => {
   const [loading, setLoading] = useState(true);
@@ -39,6 +39,17 @@ const DailyTransactions = () => {
     status: "",
     operation: "",
   });
+
+  const handleSubmit = async (formData) => {
+      console.log("DT Added:", formData);
+      try {
+        const dtId = await addDailyTransaction(formData);
+        console.log("DT added successfully with Firestore ID:", dtId);
+        // refreshData();
+      } catch (error) {
+        console.error("Failed to add DT:", error);
+      }
+    };
 
   const [addDtModalOpen, setAddDtModalOpen] = useState(false);
   const handleOpenAddDtModal = () => setAddDtModalOpen(true);
@@ -58,6 +69,16 @@ const DailyTransactions = () => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
+
+  const resetFilters = () => {
+    setFilters({
+      date: "",
+      transactionName: "",
+      status: "",
+      operation: "",
+    });
+    setFilteredDt(dt);
+  }
 
   const applyFilters = () => {
     let filtered = dt;
@@ -115,6 +136,7 @@ const DailyTransactions = () => {
           <AddDtModal
             open={addDtModalOpen}
             handleClose={handleCloseAddDtModal}
+            handleSubmit={handleSubmit}
           />
         </Box>
 
@@ -128,11 +150,20 @@ const DailyTransactions = () => {
             InputLabelProps={{ shrink: true }}
           />
           <TextField
+            select
+            fullWidth
             label="Transaction Name"
             name="transactionName"
             value={filters.transactionName}
             onChange={handleFilterChange}
-          />
+          >
+            <MenuItem value="Electricity Bill">Electricity Bill</MenuItem>
+            <MenuItem value="Mobile Recharge">Mobile Recharge</MenuItem>
+            <MenuItem value="Loan">Loan</MenuItem>
+            <MenuItem value="Spice ATM">Spice ATM</MenuItem>
+            <MenuItem value="DMT">DMT</MenuItem>
+            <MenuItem value="Others">Others</MenuItem>
+          </TextField>
           <Select
             label="Status"
             name="status"
@@ -152,13 +183,13 @@ const DailyTransactions = () => {
             displayEmpty
           >
             <MenuItem value="">All Operations</MenuItem>
-            <MenuItem value="credit">Credit</MenuItem>
-            <MenuItem value="debit">Debit</MenuItem>
+            <MenuItem value="cashin">Cash in</MenuItem>
+            <MenuItem value="cashout">Cash out</MenuItem>
           </Select>
           <Button variant="contained" color="primary" onClick={applyFilters}>
             Apply
           </Button>
-          <Button variant="outlined" color="secondary" onClick={clearFilters}>
+          <Button variant="outlined" color="grey" onClick={clearFilters}>
             Clear
           </Button>
         </Box>
@@ -184,7 +215,7 @@ const DailyTransactions = () => {
                 {filteredDt.map((transaction) => (
                   <TableRow key={transaction.id}>
                     <TableCell align="center">
-                      {transaction.operation === "credit" ? "Credit" : "Debit"}
+                      {transaction.operation === "cashin" ? "Cash in" : "Cash out"}
                     </TableCell>
                     <TableCell align="center">
                       {transaction.status === "successful" ? "Successful" : "Failure"}
@@ -193,7 +224,7 @@ const DailyTransactions = () => {
                     <TableCell
                       align="center"
                       sx={{
-                        color: transaction.operation === "credit" ? "green" : "red",
+                        color: transaction.operation === "cashin" ? "green" : "red",
                         fontWeight: "bold",
                       }}
                     >

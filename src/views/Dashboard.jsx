@@ -143,7 +143,6 @@ const Dashboard = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({ name: "", phone: "" });
 
-
   // Open Edit Modal
   const handleOpenEditModal = () => {
     setEditFormData({
@@ -259,10 +258,11 @@ const Dashboard = () => {
         {drawerContent}
       </Drawer>
 
-      <Box sx={{ margin: "20px 150px" }}>
+      <Box sx={{ margin: { xs: "10px 15px", sm: "20px 50px", md: "20px 150px" } }}>
         {/* Search Bar and Add customer Button */}
         <Box
           display="flex"
+          flexDirection={{ xs: "column", sm: "row" }}
           justifyContent="space-between"
           alignItems="center"
           mb={2}
@@ -272,7 +272,11 @@ const Dashboard = () => {
             variant="outlined"
             placeholder="Search customers"
             value={searchTerm}
-            sx={{ marginRight: "30px", width: "800px" }}
+            sx={{
+              marginBottom: { xs: "10px", sm: "0" },
+              width: { xs: "100%", sm: "70%", md: "800px" },
+              marginRight: { sm: "30px" },
+            }}
             onChange={handleSearch}
             InputProps={{
               endAdornment: <SearchIcon />,
@@ -281,6 +285,9 @@ const Dashboard = () => {
           <Button
             variant="contained"
             color="primary"
+            sx={{
+              width: { xs: "100%", sm: "auto" },
+            }}
             startIcon={<AddIcon />}
             onClick={handleOpenAddCustModal}
           >
@@ -300,7 +307,10 @@ const Dashboard = () => {
           </Box>
         ) : filteredCustomers.length > 0 ? (
           <TableContainer component={Paper}>
-            <Table>
+            <Table sx={{
+              minWidth: { xs: "100%", sm: "600px" },
+              fontSize: { xs: "12px", sm: "14px" },
+            }}>
               <TableHead>
                 <TableRow>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
@@ -337,10 +347,10 @@ const Dashboard = () => {
                           bgcolor: "#2C3E50",
                           marginLeft: "2px",
                           marginRight: "2px",
-                          padding: "4px 4px",
+                          padding: { xs: "4px", sm: "4px 8px" },
                           borderRadius: "5px",
                           color: "#fff",
-                          fontSize: "14px",
+                          fontSize: { xs: "12px", sm: "14px" },
                           cursor: "pointer",
                         }}
                         onClick={(event) => handleMenuOpen(event, customer)}
