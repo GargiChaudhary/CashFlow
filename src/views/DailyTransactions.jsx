@@ -24,11 +24,13 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { MenuOpen, Home, Payment } from "@mui/icons-material";
+import { MenuOpen, Home, Payment, AccountCircle, Close } from "@mui/icons-material";
 import AddDtModal from "../components/AddDtModal";
 import { addDailyTransaction, fetchDt } from "../firebase/dailyTransactionsServices";
+import { useNavigate } from "react-router-dom";
 
 const DailyTransactions = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [dt, setDt] = useState([]);
   const [filteredDt, setFilteredDt] = useState([]);
@@ -111,11 +113,80 @@ const DailyTransactions = () => {
     setFilteredDt(dt);
   };
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  
+    const toggleDrawer = (open) => () => {
+      setDrawerOpen(open);
+    };
+  
+    const drawerContent = (
+      <Box
+        sx={{
+          width: 250,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
+      >
+        <Box>
+          {/* Close Button */}
+          <Box sx={{
+            display: 'flex',
+            padding: '20px 15px',
+            justifyContent: 'space-between',
+            alignContent: 'center',
+            alignItems: 'center',
+          }}>
+            <AccountCircle sx={{fontSize: '35px'}}/>
+            <Typography sx={{color: '#2C3E50'}}>Harendra Kumar</Typography>
+            <IconButton onClick={toggleDrawer(false)}>
+              <Close />
+            </IconButton>
+          </Box>
+  
+          {/* Drawer List */}
+          <List>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => navigate('/')}>
+                <ListItemIcon>
+                  <Home sx={{color: '#2C3E50'}}/>
+                </ListItemIcon>
+                <ListItemText sx={{color: '#2C3E50'}} primary="Home" />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => navigate('/daily-transactions')}>
+                <ListItemIcon>
+                  <Payment sx={{
+                      color: '#2C3E50',
+                  }}/>
+                </ListItemIcon>
+                <ListItemText sx={{color: '#2C3E50'}} primary="Daily Transactions" />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Box>
+  
+        {/* Footer (Optional) */}
+        <Box p={2} textAlign="center" borderTop="1px solid #ddd">
+          <Typography variant="body2" color="textSecondary">
+            My Cash Flow © 2024
+          </Typography>
+        </Box>
+      </Box>
+    );
+
   return (
     <>
       <AppBar position="relative">
         <Toolbar>
-          <IconButton color="inherit" edge="start" sx={{ marginRight: 2 }}>
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={toggleDrawer(true)}
+            sx={{ marginRight: 2 }}
+          >
             <MenuOpen />
           </IconButton>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -123,6 +194,11 @@ const DailyTransactions = () => {
           </Typography>
         </Toolbar>
       </AppBar>
+
+      {/* Drawer */}
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+        {drawerContent}
+      </Drawer>
 
       <Box sx={{ margin: "20px 150px" }}>
         <Box display="flex" justifyContent="space-between" mb={2}>
