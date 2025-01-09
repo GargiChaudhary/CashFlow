@@ -8,7 +8,6 @@ export const addTransaction = async (customerId, transactionData) => {
 
     const newTransaction = {
       operation: transactionData.operation || "unknown",
-      status: transactionData.status || "pending",
       amount: transactionData.amount || 0,
       amountReceived: transactionData.amountReceived ?? 0,
       amountGiven: transactionData.amountGiven ?? 0,
@@ -61,7 +60,6 @@ export const fetchTransactions = async (customerId) => {
   }
 };
 
-
 export const deleteTransaction = async (customerId, transactionId) => {
   try {
     const transactionRef = doc(db, `customers/${customerId}/transactions`, transactionId);
@@ -84,4 +82,6 @@ export const updateTransaction = async (customerId, transactionId, updatedData) 
     throw error;
   }
 };
+
+
 

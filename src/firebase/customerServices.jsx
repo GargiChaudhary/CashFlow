@@ -56,3 +56,17 @@ export const updateCustomer = async (customerId, updatedData) => {
     throw error;
   }
 };
+
+export async function updateOutstanding(customerId, outstandingValue) {
+  try {
+    const customerRef = doc(db, `customers/${customerId}`);
+
+    await updateDoc(customerRef, {
+      outstanding: outstandingValue,
+    });
+
+    console.log("Outstanding field updated successfully!");
+  } catch (error) {
+    console.error("Error updating the outstanding field: ", error);
+  }
+}

@@ -8,6 +8,7 @@ import { addTransaction, deleteTransaction, fetchTransactions, updateTransaction
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditTransactionModal from "../components/EditTransactionModal";
+import { updateOutstanding } from "../firebase/customerServices";
 
 const CustomerDetails = () => {
   const location = useLocation();
@@ -19,12 +20,13 @@ const CustomerDetails = () => {
   const [transactions, setTransactions] = useState([]);
   const [outstanding, setOutstanding] = useState(customer?.outstanding || 0);
 
-  const calculateOutstanding = (transactionsList) => {
+  const calculateOutstanding = async (transactionsList) => {
     const totalRemaining = transactionsList.reduce(
       (sum, transaction) => sum + (transaction.remainingAmount || 0),
       0
     );
-    setOutstanding(totalRemaining); // Update state
+    setOutstanding(totalRemaining);
+    await updateOutstanding(customer.id, totalRemaining);
   };
 
   useEffect(() => {
@@ -98,7 +100,6 @@ const CustomerDetails = () => {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: "bold" }}>Operation</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Status</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Amount</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Amount Received</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Amount Given</TableCell>
@@ -111,11 +112,10 @@ const CustomerDetails = () => {
             <TableBody>
               {transactions.map((transaction) => (
                 <TableRow key={transaction.id}>
-                  <TableCell>{transaction.operation == 'credit' ? 'Credit' : 'Debit'}</TableCell>
-                  <TableCell>{transaction.status == 'successful' ? 'Successful' : 'Failure'}</TableCell>
+                  <TableCell>{transaction.operation == 'cashin' ? 'Cash In' : 'Cash Out'}</TableCell>
                   <TableCell>{transaction.amount}</TableCell>
-                  <TableCell>{transaction.operation === "debit" ? "-" : transaction.amountReceived}</TableCell>
-                  <TableCell>{transaction.operation === "credit" ? "-" : transaction.amountGiven}</TableCell>
+                  <TableCell>{transaction.operation === "cashout" ? "-" : transaction.amountReceived}</TableCell>
+                  <TableCell>{transaction.operation === "cashin" ? "-" : transaction.amountGiven}</TableCell>
                   <TableCell>{transaction.remarks}</TableCell>
                   <TableCell sx={{
                     color: transaction.remainingAmount > 0 ? 'green' : transaction.remainingAmount < 0 ? 'red' : 'black',

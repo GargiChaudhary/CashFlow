@@ -13,8 +13,7 @@ import {
 
 const AddTransactionModal = ({ open, handleClose, handleSubmit }) => {
   const [formData, setFormData] = useState({
-    operation: "credit",
-    status: "successful",
+    operation: "cashin",
     amount: "",
     amountReceived: "",
     amountGiven: "",
@@ -35,9 +34,9 @@ const AddTransactionModal = ({ open, handleClose, handleSubmit }) => {
     const received = parseFloat(amountReceived) || 0;
     const given = parseFloat(amountGiven) || 0;
 
-    if (operation === "credit") {
+    if (operation === "cashin") {
       return totalAmount - received;
-    } else if (operation === "debit") {
+    } else if (operation === "cashout") {
       return given - totalAmount;
     }
     return 0;
@@ -68,12 +67,12 @@ const AddTransactionModal = ({ open, handleClose, handleSubmit }) => {
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value="credit">Credit</MenuItem>
-            <MenuItem value="debit">Debit</MenuItem>
+            <MenuItem value="cashin">Cash In</MenuItem>
+            <MenuItem value="cashout">Cash Out</MenuItem>
           </TextField>
 
           {/* Status */}
-          <TextField
+          {/* <TextField
             select
             label="Status"
             name="status"
@@ -83,7 +82,7 @@ const AddTransactionModal = ({ open, handleClose, handleSubmit }) => {
           >
             <MenuItem value="successful">Successful</MenuItem>
             <MenuItem value="failed">Failed</MenuItem>
-          </TextField>
+          </TextField> */}
 
           {/* Total Amount */}
           <TextField
@@ -100,10 +99,10 @@ const AddTransactionModal = ({ open, handleClose, handleSubmit }) => {
             label="Amount Received"
             name="amountReceived"
             type="number"
-            value={formData.operation === "credit" ? formData.amountReceived : "0"}
+            value={formData.operation === "cashin" ? formData.amountReceived : "0"}
             onChange={handleChange}
             fullWidth
-            disabled={formData.operation === "debit"}
+            disabled={formData.operation === "cashout"}
           />
 
           {/* Amount Given (for Debit) */}
@@ -111,10 +110,10 @@ const AddTransactionModal = ({ open, handleClose, handleSubmit }) => {
             label="Amount Given"
             name="amountGiven"
             type="number"
-            value={formData.operation === "debit" ? formData.amountGiven : "0"}
+            value={formData.operation === "cashout" ? formData.amountGiven : "0"}
             onChange={handleChange}
             fullWidth
-            disabled={formData.operation === "credit"}
+            disabled={formData.operation === "cashin"}
           />
 
           {/* Remarks */}
