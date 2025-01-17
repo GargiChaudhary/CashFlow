@@ -99,29 +99,36 @@ const CustomerDetails = () => {
           <Table>
             <TableHead>
               <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Operation</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Amount</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Amount Received</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Amount Given</TableCell>
+                {/* <TableCell sx={{ fontWeight: "bold" }}>Amount Received</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Amount Given</TableCell> */}
                 <TableCell sx={{ fontWeight: "bold" }}>Remarks</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Remaining Amount</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactions.map((transaction) => (
+              {transactions
+                .slice()
+                .sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime)).map((transaction) => (
                 <TableRow key={transaction.id}>
+                  {/* <TableCell>{new Date(transaction.dateTime).toLocaleString()}</TableCell> */}
+                  <TableCell>{new Intl.DateTimeFormat('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  }).format(new Date(transaction.dateTime))}</TableCell>
                   <TableCell>{transaction.operation == 'cashin' ? 'Cash In' : 'Cash Out'}</TableCell>
                   <TableCell>{transaction.amount}</TableCell>
-                  <TableCell>{transaction.operation === "cashout" ? "-" : transaction.amountReceived}</TableCell>
-                  <TableCell>{transaction.operation === "cashin" ? "-" : transaction.amountGiven}</TableCell>
+                  {/* <TableCell>{transaction.operation === "cashout" ? "-" : transaction.amountReceived}</TableCell>
+                  <TableCell>{transaction.operation === "cashin" ? "-" : transaction.amountGiven}</TableCell> */}
                   <TableCell>{transaction.remarks}</TableCell>
                   <TableCell sx={{
                     color: transaction.remainingAmount > 0 ? 'green' : transaction.remainingAmount < 0 ? 'red' : 'black',
                     fontWeight: 'bold'
                   }}>{transaction.remainingAmount}</TableCell>
-                  <TableCell>{new Date(transaction.dateTime).toLocaleString()}</TableCell>
                   <TableCell>
                     <IconButton
                       onClick={(event) => handleActionClick(event, transaction)}
