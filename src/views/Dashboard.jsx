@@ -29,7 +29,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import AddCustomerModal from "../components/AddCustomerModal";
 import { db } from "../firebase/firebaseConfig"; 
-import { collection, getDocs } from "firebase/firestore";
+import { doc, collection, getDocs } from "firebase/firestore";
 import { addCustomer, deleteCustomer, fetchCustomers, updateCustomer } from "../firebase/customerServices";
 import AddTransactionModal from "../components/AddTransactionModal";
 import { addTransaction } from "../firebase/transactionServices";
@@ -41,6 +41,7 @@ import { AccountCircle, Close, Home, MenuOpen, Payment,} from "@mui/icons-materi
 const Dashboard = () => {
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
+  const [total, setTotal] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCustomers, setfilteredCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,21 +82,32 @@ const Dashboard = () => {
     }
   };
 
+  const refreshData = async () => {
+    const response = await fetchCustomers();
+    setCustomers(response);
+    setfilteredCustomers(response);
+    console.log("hello helloooo", response);
+    let totalOutstanding = 0;
+    response.forEach((data) => {
+      console.log("huhu:", data);
+      // const data = doc.data();
+      totalOutstanding += data.outstanding || 0;
+    });
+    setTotal(totalOutstanding);
+    console.log("Outstandingggggg isss: ", totalOutstanding);
+    console.log("Outstandingggggg222 isss: ", total);
+  }
+
   useEffect(() => {
     const fetchcustomers = async () => {
       const response = await fetchCustomers();
       setCustomers(response);
       setfilteredCustomers(response);
       setLoading(false);
+      refreshData();
     }
     fetchcustomers();
   }, []);
-
-  const refreshData = async () => {
-    const response = await fetchCustomers();
-    setCustomers(response);
-    setfilteredCustomers(response);
-  }
 
   const handleDeleteCustomer = async () => {
     if (selectedCustomer) {
@@ -299,6 +311,17 @@ const Dashboard = () => {
             handleSubmit={handleAddCustomer}
           />
         </Box>
+
+        <Typography
+          sx={{
+            fontSize: "18px",
+            color: total > 0 ? 'green' : total < 0 ? 'red' : 'black',
+            fontWeight: "bold",
+            mb: '1rem'
+          }}
+        >
+          Outstanding: {total}
+        </Typography>
 
         {/* customer Table */}
         {loading ? (
