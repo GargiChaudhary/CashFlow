@@ -84,6 +84,7 @@ const Dashboard = () => {
 
   const refreshData = async () => {
     const response = await fetchCustomers();
+    setLoading(false);
     setCustomers(response);
     setfilteredCustomers(response);
     console.log("hello helloooo", response);
