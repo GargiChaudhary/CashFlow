@@ -106,6 +106,7 @@ const CustomerDetails = () => {
                 <TableCell sx={{ fontWeight: "bold" }}>Amount Given</TableCell> */}
                 <TableCell sx={{ fontWeight: "bold" }}>Remarks</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Remaining Amount</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }}>Outstanding Till Yet</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -129,6 +130,9 @@ const CustomerDetails = () => {
                     color: transaction.remainingAmount > 0 ? 'green' : transaction.remainingAmount < 0 ? 'red' : 'black',
                     fontWeight: 'bold'
                   }}>{transaction.remainingAmount}</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}> {/* New Column */}
+                    {transaction.outstandingTillYet}
+                  </TableCell>
                   <TableCell>
                     <IconButton
                       onClick={(event) => handleActionClick(event, transaction)}
